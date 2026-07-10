@@ -1,0 +1,9 @@
+# Streamlit runtime config.
+# toolbarMode = "minimal" hides the Deploy button and developer menu for visitors,
+# giving the deployed app a clean, product-like toolbar.
+[client]
+toolbarMode = "minimal"
+
+[theme]
+base = "dark"
+primaryColor = "#4f8bf9"
