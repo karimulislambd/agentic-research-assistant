@@ -1,0 +1,19 @@
+# --- LLM / agent ---
+groq==0.13.0
+
+# --- RAG ---
+pypdf==5.1.0
+fastembed==0.4.2          # ONNX embeddings — lightweight, no torch
+faiss-cpu==1.9.0.post1
+numpy==1.26.4
+
+# --- UI ---
+streamlit==1.40.2
+
+# --- utils ---
+python-dotenv==1.0.1
+
+# --- dev / test ---
+pytest==8.3.4
+ruff==0.8.4
+reportlab==4.2.5          # only used to build PDF fixtures in tests
