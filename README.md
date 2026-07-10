@@ -1,4 +1,9 @@
-# 📚 Agentic Research Assistant — with self-evaluation
+# Agentic Research Assistant — with self-evaluation
+
+[![CI](https://github.com/karimulislambd/agentic-research-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/karimulislambd/agentic-research-assistant/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://agentic-research-assistant-karimulislambd.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Lint: ruff](https://img.shields.io/badge/lint-ruff-000000?logo=ruff&logoColor=white)](https://github.com/astral-sh/ruff)
 
 > An LLM **agent** that answers questions across your uploaded research papers, cites its
 > sources, and **scores its own answers** for faithfulness and relevance.
@@ -7,8 +12,7 @@ Most "chat with your PDF" demos stop at retrieval. This one adds an **evaluation
 every answer is judged (1–5) on whether it is *grounded in the retrieved text* and whether
 it *actually answers the question* — turning a chatbot into a measurable, benchmarkable system.
 
-**🔗 Live demo:** _add your Streamlit / Hugging Face Spaces URL here_
-**🎬 Demo GIF:** _add a short screen recording here_
+**Live demo:** https://agentic-research-assistant-karimulislambd.streamlit.app/
 
 ---
 
