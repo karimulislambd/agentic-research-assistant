@@ -12,7 +12,11 @@ from evaluation.judge import evaluate
 from rag.ingest import ingest_pdfs
 from rag.store import VectorStore
 
-st.set_page_config(page_title="Agentic Research Assistant", page_icon="📚", layout="wide")
+st.set_page_config(
+    page_title="Agentic Research Assistant",
+    page_icon=":material/science:",
+    layout="wide",
+)
 
 
 # ---- session state ----
@@ -24,7 +28,7 @@ if "history" not in st.session_state:
 
 def _sidebar() -> None:
     with st.sidebar:
-        st.header("📚 Your papers")
+        st.subheader(":material/description: Your papers")
         uploaded = st.file_uploader(
             "Upload PDF papers", type="pdf", accept_multiple_files=True
         )
@@ -56,7 +60,7 @@ def _score_badge(label: str, value: int) -> str:
 
 
 def main() -> None:
-    st.title("📚 Agentic Research Assistant")
+    st.title("Agentic Research Assistant")
     st.caption(
         "Ask questions across your uploaded papers. An agent retrieves, cites, and "
         "**scores its own answers** for faithfulness & relevance."
@@ -72,7 +76,7 @@ def main() -> None:
         with st.chat_message("assistant"):
             st.markdown(turn["answer"])
             if turn["trace"]:
-                st.caption("🛠 Tools used: " + "  →  ".join(turn["trace"]))
+                st.caption(":material/build: Tools used: " + "  →  ".join(turn["trace"]))
             ev = turn["eval"]
             if ev:
                 st.markdown(
@@ -81,7 +85,7 @@ def main() -> None:
                     + _score_badge("Relevance", ev.relevance),
                     unsafe_allow_html=True,
                 )
-                st.caption(f"⚖️ Judge: {ev.reason}")
+                st.caption(f":material/balance: Evaluation: {ev.reason}")
 
     question = st.chat_input("Ask about your papers…")
     if not question:
@@ -102,7 +106,7 @@ def main() -> None:
             result = run_agent(question, store)
         st.markdown(result.answer)
         if result.tool_trace:
-            st.caption("🛠 Tools used: " + "  →  ".join(result.tool_trace))
+            st.caption(":material/build: Tools used: " + "  →  ".join(result.tool_trace))
         with st.spinner("Evaluating answer…"):
             ev = evaluate(question, result.context, result.answer)
         st.markdown(
@@ -111,7 +115,7 @@ def main() -> None:
             + _score_badge("Relevance", ev.relevance),
             unsafe_allow_html=True,
         )
-        st.caption(f"⚖️ Judge: {ev.reason}")
+        st.caption(f":material/balance: Evaluation: {ev.reason}")
 
     st.session_state.history.append(
         {
