@@ -7,3 +7,6 @@ data/*.pdf
 .ruff_cache/
 *.faiss
 .DS_Store
+
+# local tooling
+.claude/
