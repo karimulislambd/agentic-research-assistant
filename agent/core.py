@@ -35,7 +35,7 @@ class AgentResult:
 
 
 def _client() -> Groq:
-    return Groq(api_key=config.require_api_key())
+    return Groq(api_key=config.require_api_key(), max_retries=config.LLM_MAX_RETRIES)
 
 
 def _parse_malformed(failed_generation: str) -> list[dict]:
@@ -100,18 +100,23 @@ def _extract_failed_generation(exc: BadRequestError) -> str:
 def run_agent(question: str, store: VectorStore) -> AgentResult:
     """Answer a question, letting the model call tools until it's ready to respond."""
     client = _client()
+    # Tell the agent what is indexed, so "this paper" / "summarize it" resolves to a document.
+    system = AGENT_SYSTEM + "\n\nUploaded papers: " + (", ".join(store.sources) or "(none)")
     messages: list[dict] = [
-        {"role": "system", "content": AGENT_SYSTEM},
+        {"role": "system", "content": system},
         {"role": "user", "content": question},
     ]
     trace: list[str] = []
+    # Every passage retrieved across ALL searches, so the judge sees what the answer drew on
+    # (not just the last search's results).
+    context: list[str] = []
 
     for _ in range(config.MAX_AGENT_STEPS):
         tool_calls, text = _complete_with_tools(client, messages)
 
         # No tool calls -> the model has produced its final answer.
         if not tool_calls:
-            return AgentResult(answer=text, tool_trace=trace, context=list(tools.LAST_CONTEXT))
+            return AgentResult(answer=text, tool_trace=trace, context=context)
 
         # Record the assistant turn (with its tool calls) before appending results.
         messages.append({"role": "assistant", "content": text, "tool_calls": tool_calls})
@@ -125,6 +130,8 @@ def run_agent(question: str, store: VectorStore) -> AgentResult:
                 args = {}
             result = tools.dispatch(name, args, store)
             trace.append(f"{name}({args.get('query', '')!r})")
+            if name == "search_papers":
+                context.extend(c for c in tools.LAST_CONTEXT if c not in context)
             messages.append(
                 {
                     "role": "tool",
@@ -134,17 +141,25 @@ def run_agent(question: str, store: VectorStore) -> AgentResult:
                 }
             )
 
-    # Hit the step cap — ask for a final answer with what we have.
-    messages.append(
-        {"role": "user", "content": "Give your best final answer now using what you found."}
-    )
+    # Hit the step cap — ask for a final answer with what we have. The history is flattened
+    # into plain text: with tool turns still in it, some models (e.g. GPT-OSS) keep emitting
+    # tool calls even when no tools are offered, which Groq rejects as tool_use_failed.
+    passages = "\n\n---\n\n".join(context) or "(no passages were found)"
     final = client.chat.completions.create(
         model=config.LLM_MODEL,
-        messages=messages,
+        messages=[
+            {"role": "system", "content": system},
+            {
+                "role": "user",
+                "content": f"QUESTION:\n{question}\n\nRETRIEVED PASSAGES:\n{passages}\n\n"
+                "Answer the question now using only these passages, with inline citations. "
+                "Do not call any tools.",
+            },
+        ],
         temperature=config.LLM_TEMPERATURE,
     )
     return AgentResult(
         answer=final.choices[0].message.content or "",
         tool_trace=trace,
-        context=list(tools.LAST_CONTEXT),
+        context=context,
     )

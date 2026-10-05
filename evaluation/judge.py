@@ -47,11 +47,11 @@ def evaluate(question: str, context: list[str], answer: str) -> Evaluation:
     """Score one answer. Returns neutral zeros if there is nothing to judge."""
     if not answer.strip():
         return Evaluation(0, 0, "empty answer")
-    client = Groq(api_key=config.require_api_key())
+    client = Groq(api_key=config.require_api_key(), max_retries=config.LLM_MAX_RETRIES)
     ctx = "\n\n".join(context) if context else "(no retrieved context)"
     user = f"QUESTION:\n{question}\n\nCONTEXT:\n{ctx}\n\nANSWER:\n{answer}"
     resp = client.chat.completions.create(
-        model=config.LLM_MODEL,
+        model=config.JUDGE_MODEL,
         messages=[
             {"role": "system", "content": JUDGE_SYSTEM},
             {"role": "user", "content": user},

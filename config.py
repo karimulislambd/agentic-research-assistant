@@ -12,6 +12,11 @@ GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
 # GPT-OSS 120B is free on Groq and supports native tool-calling.
 LLM_MODEL: str = os.getenv("LLM_MODEL", "openai/gpt-oss-120b")
 LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
+# The judge runs on a smaller model: Groq rate-limits each model separately (free tier:
+# 8k tokens/min), so the agent and the judge don't compete for the same budget.
+JUDGE_MODEL: str = os.getenv("JUDGE_MODEL", "openai/gpt-oss-20b")
+# Retries on 429 / 5xx; the SDK waits for the retry-after hint Groq sends.
+LLM_MAX_RETRIES: int = int(os.getenv("LLM_MAX_RETRIES", "5"))
 
 # --- Embeddings (fastembed / ONNX) ---
 EMBED_MODEL: str = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")  # 384-dim, ONNX
