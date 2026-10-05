@@ -3,7 +3,7 @@
 Returns both the final answer and a trace of the tools used, so the UI can show
 *how* the agent reasoned — useful in interviews and for debugging.
 
-Robustness note: open models (e.g. Llama 3.3 on Groq) occasionally emit a tool
+Robustness note: open models (e.g. GPT-OSS 120B on Groq) occasionally emit a tool
 call in a malformed text format like `<function=search_papers{"query": "x"}</function>`
 instead of the structured `tool_calls` field. Groq rejects that with a 400
 `tool_use_failed` error. Rather than crash, we parse the intended call out of the

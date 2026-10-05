@@ -9,8 +9,8 @@ load_dotenv()
 
 # --- LLM (Groq) ---
 GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
-# Llama 3.3 70B is free on Groq and supports native tool-calling.
-LLM_MODEL: str = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
+# GPT-OSS 120B is free on Groq and supports native tool-calling.
+LLM_MODEL: str = os.getenv("LLM_MODEL", "openai/gpt-oss-120b")
 LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
 
 # --- Embeddings (fastembed / ONNX) ---

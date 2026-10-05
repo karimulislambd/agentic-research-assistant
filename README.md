@@ -30,7 +30,7 @@ it *actually answers the question* — turning a chatbot into a measurable, benc
 
 ```
              ┌───────────────────────────────────────────┐
- question ─► │  Agent loop (Groq · Llama 3.3 · tool-call) │
+ question ─► │  Agent loop (Groq · GPT-OSS 120B · tool-call) │
              │    ├─ search_papers → FAISS over your PDFs │
              │    └─ web_search    → background context    │
              └───────────────┬───────────────────────────┘
@@ -43,7 +43,7 @@ it *actually answers the question* — turning a chatbot into a measurable, benc
 
 ## Tech stack
 
-- **LLM:** Groq (`llama-3.3-70b-versatile`) — free tier, native tool-calling
+- **LLM:** Groq (`openai/gpt-oss-120b`) — free tier, native tool-calling
 - **Embeddings:** `fastembed` (`bge-small-en-v1.5`, **ONNX**) — lightweight, no PyTorch
 - **Vector search:** FAISS (`IndexFlatIP`, cosine)
 - **UI:** Streamlit
