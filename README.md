@@ -52,8 +52,8 @@ it *actually answers the question* — turning a chatbot into a measurable, benc
 ## Quickstart
 
 ```bash
-git clone <your-repo-url>
-cd ai-research-assistant
+git clone https://github.com/karimulislambd/agentic-research-assistant.git
+cd agentic-research-assistant
 
 python -m venv .venv
 # Windows:  .venv\Scripts\activate
